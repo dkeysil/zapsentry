@@ -45,4 +45,8 @@ type Configuration struct {
 	// Hub overrides the sentry.CurrentHub value.
 	// See sentry.Hub docs for more detail.
 	Hub *sentry.Hub
+
+	// FilterEvent is a function that is called for every event before it is sent to Sentry.
+	// If the function returns true, the event is dropped.
+	FilterEvent func(event *sentry.Event) bool
 }

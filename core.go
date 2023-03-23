@@ -44,6 +44,12 @@ func NewCore(cfg Configuration, factory SentryClientFactory) (zapcore.Core, erro
 		cfg.MaxBreadcrumbs = defaultMaxBreadcrumbs
 	}
 
+	if cfg.FilterEvent == nil {
+		cfg.FilterEvent = func(event *sentry.Event) bool {
+			return false
+		}
+	}
+
 	core := core{
 		client: client,
 		cfg:    &cfg,
@@ -128,7 +134,9 @@ func (c *core) Write(ent zapcore.Entry, fs []zapcore.Field) error {
 			}
 		}
 
-		_ = c.client.CaptureEvent(event, nil, c.scope())
+		if !c.cfg.FilterEvent(event) {
+			_ = c.client.CaptureEvent(event, nil, c.scope())
+		}
 	}
 
 	// We may be crashing the program, so should flush any buffered events.
