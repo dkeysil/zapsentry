@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"go.uber.org/zap/zaptest/observer"
 
-	"github.com/TheZeroSlave/zapsentry"
+	"github.com/dkeysil/zapsentry"
 )
 
 func ExampleAttachCoreToLogger() {
@@ -29,9 +29,9 @@ func ExampleAttachCoreToLogger() {
 
 	// Setup zapsentry
 	core, err := zapsentry.NewCore(zapsentry.Configuration{
-		Level: zapcore.ErrorLevel, // when to send message to sentry
-		EnableBreadcrumbs: true, // enable sending breadcrumbs to Sentry
-		BreadcrumbLevel: zapcore.InfoLevel, // at what level should we sent breadcrumbs to sentry
+		Level:             zapcore.ErrorLevel, // when to send message to sentry
+		EnableBreadcrumbs: true,               // enable sending breadcrumbs to Sentry
+		BreadcrumbLevel:   zapcore.InfoLevel,  // at what level should we sent breadcrumbs to sentry
 		Tags: map[string]string{
 			"component": "system",
 		},
@@ -59,8 +59,8 @@ func ExampleAttachCoreToLogger() {
 
 func mockSentryClient(f func(event *sentry.Event)) *sentry.Client {
 	client, _ := sentry.NewClient(sentry.ClientOptions{
-		Dsn:              "",
-		Transport:        &transport{MockSendEvent: f},
+		Dsn:       "",
+		Transport: &transport{MockSendEvent: f},
 	})
 	return client
 }
